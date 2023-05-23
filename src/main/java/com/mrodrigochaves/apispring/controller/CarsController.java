@@ -21,32 +21,43 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/api/cars")
 @AllArgsConstructor
-
 public class CarsController {
 
-    
     private CarsRepository carsRepository;
 
-
-    //@RequestMapping(method = RequestMethod.GET)
+    /**
+     * Endpoint para obter todos os carros.
+     *
+     * @return Lista de carros
+     */
     @GetMapping
-    public @ResponseBody List<Car> list(){
+    public @ResponseBody List<Car> listar() {
         return carsRepository.findAll();
     }
 
+    /**
+     * Endpoint para obter um carro específico pelo seu ID.
+     *
+     * @param id O ID do carro a ser obtido
+     * @return ResponseEntity contendo o carro, se encontrado, ou status de não encontrado caso contrário
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Car> findById(@PathVariable Long id){
+    public ResponseEntity<Car> encontrarPorId(@PathVariable Long id) {
         return carsRepository.findById(id)
-        .map(record -> ResponseEntity.ok().body(record))
-        .orElse(ResponseEntity.notFound().build());
-    } 
-
-    //@RequestMapping(method = RequestMethod.POST)
-    @PostMapping
-    @ResponseStatus(code = HttpStatus.CREATED )
-    public Car create(@RequestBody Car car ) {
-        return carsRepository.save(car);
-              
+                .map(registro -> ResponseEntity.ok().body(registro))
+                .orElse(ResponseEntity.notFound().build());
     }
-    
+
+    /**
+     * Endpoint para criar um novo carro.
+     *
+     * @param car O objeto carro a ser criado
+     * @return O objeto carro criado
+     */
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Car criar(@RequestBody Car car) {
+        return carsRepository.save(car);
+    }
+
 }
